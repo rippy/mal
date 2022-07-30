@@ -1,0 +1,5 @@
+#!/bin/bash
+
+#exec /usr/local/bin/python3 $(dirname $0)/${STEP:-stepA_rippy}.py "${@}"
+exec ${python_MODE:-python3} $(dirname $0)/${STEP:-stepA_rippy}.py "${@}"
+

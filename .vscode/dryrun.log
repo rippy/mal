@@ -1,0 +1,46 @@
+make --dry-run --always-make --keep-going --print-directory
+make: Entering directory `/Users/jkrippy/Documents/projects/wip/mal'
+echo
+echo 'USAGE:'
+echo
+echo 'Rules/Targets:'
+echo
+echo 'make "IMPL"                       # build all steps of IMPL'
+echo 'make "build^IMPL"                 # build all steps of IMPL'
+echo 'make "IMPL^STEP"                  # build STEP of IMPL'
+echo 'make "build^IMPL^STEP"            # build STEP of IMPL'
+echo
+echo 'make "test"                       # test all implementations'
+echo 'make "test^IMPL"                  # test all steps of IMPL'
+echo 'make "test^STEP"                  # test STEP for all implementations'
+echo 'make "test^IMPL^STEP"             # test STEP of IMPL'
+echo
+echo 'make "perf"                       # run microbenchmarks for all implementations'
+echo 'make "perf^IMPL"                  # run microbenchmarks for IMPL'
+echo
+echo 'make "repl^IMPL"                  # run stepA of IMPL'
+echo 'make "repl^IMPL^STEP"             # test STEP of IMPL'
+echo
+echo 'make "clean"                      # run 'make clean' for all implementations'
+echo 'make "clean^IMPL"                 # run 'make clean' for IMPL'
+echo
+echo 'make "stats"                      # run 'make stats' for all implementations'
+echo 'make "stats-lisp"                 # run 'make stats-lisp' for all implementations'
+echo 'make "stats^IMPL"                 # run 'make stats' for IMPL'
+echo 'make "stats-lisp^IMPL"            # run 'make stats-lisp' for IMPL'
+echo
+echo 'Options/Settings:'
+echo
+echo 'make MAL_IMPL=IMPL "test^mal..."  # use IMPL for self-host tests'
+echo 'make REGRESS=1 "test..."          # test with previous step tests too'
+echo 'make DOCKERIZE=1 ...              # to dockerize above rules/targets'
+echo 'make TEST_OPTS="--opt ..."        # options to pass to runtest.py'
+echo
+echo 'Other:'
+echo
+echo 'make "docker-build^IMPL"          # build docker image for IMPL'
+echo
+echo 'make "docker-shell^IMPL"          # start bash shell in docker image for IMPL'
+echo
+make: Leaving directory `/Users/jkrippy/Documents/projects/wip/mal'
+ 
