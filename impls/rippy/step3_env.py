@@ -3,8 +3,9 @@
 import atexit
 import os
 import readline as rl
-from mal_types import *
 
+from mal_env import *
+from mal_types import *
 import reader
 import printer
 
@@ -21,7 +22,7 @@ def READ(s: str) -> str:
     result = reader.read_str(s)
     return result
 
-def EVAL(ast: MalType, repl_env: dict) -> MalType:
+def EVAL(ast: MalType, repl_env: MalEnv) -> MalType:
     """
     Modify EVAL to check if the first parameter ast is a list.
 
@@ -36,7 +37,50 @@ def EVAL(ast: MalType, repl_env: dict) -> MalType:
     if isinstance(ast, MalList):
         if len(ast.items) == 0:
             return ast
+
+        a0 = ast.items[0]
+        if isinstance(a0, MalSymbol):
+            if a0.symbol == "def!":
+                # call the set method of the current environment (second parameter of EVAL called env) using the
+                # unevaluated first parameter (second list element) as the symbol key
+                # and the evaluated second parameter as the value.
+                a1, a2 = ast.items[1], ast.items[2]
+                #v = eval_ast(a2, repl_env)
+                v = EVAL(a2, repl_env)
+                repl_env.set(a1.symbol, v)
+                return v
+
+            elif a0.symbol == "let*":
+                # create a new environment using the current environment as the outer value and then use the
+                # first parameter as a list of new bindings in the "let*" environment.
+                new_env = MalEnv(repl_env)
+                a1 = ast.items[1]
+                bindings = a1
+
+                assert(isinstance(bindings, MalCollection))  # validate we have a MalCollection
+                assert(len(bindings.items) % 2 == 0)         # validate an even number of items
+
+                # Take the second element of the binding list, call EVAL using the new "let*" environment as
+                # the evaluation environment, then call set on the "let*" environment using the first binding
+                # list element as the key and the evaluated second element as the value.
+                # This is repeated for each odd/even pair in the binding list.
+                # Note in particular, the bindings earlier in the list can be referred to by later bindings.
+                l = bindings.items
+                for i in range(0, len(l)-1, 2):
+                    b0, b1 = l[i], l[i+1]
+                    v = EVAL(b1, new_env)
+                    new_env.set(b0.symbol, v)
+
+                # Finally, the second parameter (third element) of the original let* form is evaluated using the
+                # new "let*" environment and the result is returned as the result of the let*
+                # (the new let environment is discarded upon completion).
+                a2 = ast.items[2]
+                #r = eval_ast(a2, new_env)
+                r = EVAL(a2, new_env)
+                return r
+
         el = eval_ast(ast, repl_env)
+
         f = el.items[0]
         r = f(*el.items[1:])
         return r
@@ -57,7 +101,7 @@ def EVAL(ast: MalType, repl_env: dict) -> MalType:
 
 
 #def eval_ast(ast: MalType, repl_env: dict) -> str:
-def eval_ast(ast: MalType, repl_env: dict):
+def eval_ast(ast: MalType, repl_env: MalEnv):
     """
     eval_ast switches on the type of ast as follows:
     -    symbol:  lookup the symbol in the environment structure and return the value or raise an error if no value is found
@@ -71,9 +115,10 @@ def eval_ast(ast: MalType, repl_env: dict):
     """
     if isinstance(ast, MalSymbol):
         symbol = ast.symbol
-        if symbol in repl_env:
-            return repl_env[symbol]
-        raise Exception("symbol not found")
+        # if symbol in repl_env:
+        #     return repl_env[symbol]
+        # raise Exception("symbol not found")
+        return repl_env.find(symbol)
 
     if isinstance(ast, MalList):
         l = []
@@ -140,12 +185,15 @@ if __name__ == '__main__':
         pass
 
     try:
-        repl_env = {
-            '+':  mal_add,
-            '-':  mal_sub,
-            '*':  mal_mul,
-            '/':  mal_div,
-        }
+        repl_env = MalEnv(None)
+        # repl_env.set(MalSymbol("+"), mal_add)
+        # repl_env.set(MalSymbol("-"), mal_sub)
+        # repl_env.set(MalSymbol("*"), mal_mul)
+        # repl_env.set(MalSymbol("/"), mal_div)
+        repl_env.set("+", mal_add)
+        repl_env.set("-", mal_sub)
+        repl_env.set("*", mal_mul)
+        repl_env.set("/", mal_div)
 
         ps1 = "user> "
         while True:

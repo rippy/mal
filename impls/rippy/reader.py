@@ -59,7 +59,7 @@ def read_list(reader: Reader) -> MalList:
             raise Exception("end of input")
         token = reader.peek()
         if token == ")":
-            reader.next() # skip over the )
+            reader.next() # skip past the ending )
             break
         v = read_form(reader)
         r.append(v)
@@ -72,7 +72,7 @@ def read_vector(reader: Reader) -> MalVector:
             raise Exception("end of input")
         token = reader.peek()
         if token == "]":
-            # skip over the ]
+            reader.next() # skip past the ending ]
             break
         v = read_form(reader)
         r.append(v)
@@ -85,7 +85,7 @@ def read_hashmap(reader: Reader) -> MalList:
             raise Exception("end of input")
         token = reader.peek()
         if token == "}":
-            reader.next() # skip over the }
+            reader.next() # skip past the ending }
             break
         k = read_form(reader)
         v = read_form(reader)

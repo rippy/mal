@@ -37,8 +37,8 @@ class MalVector(MalCollection):
         return "[" + " ".join(l) + "]"
 
 class MalHashmap(MalCollection):
-    def __init__(self, dict: hash) -> None:
-        self.dict = dict
+    def __init__(self, values: dict) -> None:
+        self.values = values
 
     # def set(self, k, v):
     #     self.dict[k] = v
@@ -48,7 +48,7 @@ class MalHashmap(MalCollection):
 
     def __repr__(self) -> str:
         l = []
-        for k, v in self.dict:
+        for k, v in self.values:
             l.append(repr(k))
             l.append(repr(v))
         return "{" + " ".join(l) + "}"
@@ -65,7 +65,7 @@ class MalSymbol(MalScalar):
         self.symbol = symbol
 
     def __repr__(self) -> str:
-        return "MalSymbol(%s)" % self.symbol
+        return """MalSymbol("%s")""" % self.symbol
 
 class MalNumber(MalScalar):
     def __init__(self, s: str) -> None:
@@ -73,5 +73,5 @@ class MalNumber(MalScalar):
         self.x = int(self.s) # TODO more of a number
 
     def __repr__(self) -> str:
-        return "MalNumber(%s)" % self.s
+        return """MalNumber(%s)""" % self.s
 

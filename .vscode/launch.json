@@ -17,7 +17,8 @@
             "type": "python",
             "request": "launch",
             //"program": "impls/rippy/step1_read_print.py",
-            "program": "impls/rippy/step2_eval.py",
+            //"program": "impls/rippy/step2_eval.py",
+            "program": "impls/rippy/step3_env.py",
             "console": "integratedTerminal",
             "justMyCode": true
         }

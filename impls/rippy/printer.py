@@ -26,7 +26,7 @@ def pr_str(o: MalType) -> str:
 
     if isinstance(o, MalHashmap):
         l = []
-        for k, v in o.dict.items():
+        for k, v in o.values.items():
             l.append(pr_str(k))
             l.append(pr_str(v))
         return "{" + " ".join(l) + "}"
