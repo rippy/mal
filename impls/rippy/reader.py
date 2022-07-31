@@ -36,9 +36,18 @@ def read_str(s: str) -> MalType:
 
 def read_form(reader: Reader) -> MalType:
     token = reader.peek()
-    if "(" == token:
-        reader.next() # TODO is this right? advance us forward past the first "("
+    if token[0] == ';':
+        reader.next()
+        return None
+    elif "(" == token:
+        reader.next()
         result = read_list(reader)
+    elif "[" == token:
+        reader.next()
+        result = read_vector(reader)
+    elif "{" == token:
+        reader.next()
+        result = read_hashmap(reader)
     else:
         result = read_atom(reader)
     return result
@@ -50,17 +59,45 @@ def read_list(reader: Reader) -> MalList:
             raise Exception("end of input")
         token = reader.peek()
         if token == ")":
+            reader.next() # skip over the )
             break
         v = read_form(reader)
         r.append(v)
     return MalList(r)
 
+def read_vector(reader: Reader) -> MalVector:
+    r = []
+    while True:
+        if not(reader.has_more()):
+            raise Exception("end of input")
+        token = reader.peek()
+        if token == "]":
+            # skip over the ]
+            break
+        v = read_form(reader)
+        r.append(v)
+    return MalVector(r)
+
+def read_hashmap(reader: Reader) -> MalList:
+    r = {}
+    while True:
+        if not(reader.has_more()):
+            raise Exception("end of input")
+        token = reader.peek()
+        if token == "}":
+            reader.next() # skip over the }
+            break
+        k = read_form(reader)
+        v = read_form(reader)
+        r[k] = v
+    return MalHashmap(r)
+
 # https://stackoverflow.com/questions/40097590/detect-whether-a-python-string-is-a-number-or-a-letter
-def is_number(n):
+def is_number(n) -> bool:
     is_number = True
     try:
         num = float(n)
-        is_number = num == num
+        is_number = (num == num)
     except ValueError:
         is_number = False
     except TypeError:

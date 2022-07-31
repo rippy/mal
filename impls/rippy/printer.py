@@ -18,4 +18,19 @@ def pr_str(o: MalType) -> str:
             l.append(pr_str(e))
         return "(" + " ".join(l) + ")"
 
-    raise Exception("unknown type: " + o)
+    if isinstance(o, MalVector):
+        l = []
+        for e in o.items:
+            l.append(pr_str(e))
+        return "[" + " ".join(l) + "]"
+
+    if isinstance(o, MalHashmap):
+        l = []
+        for k, v in o.dict.items():
+            l.append(pr_str(k))
+            l.append(pr_str(v))
+        return "{" + " ".join(l) + "}"
+
+    #raise Exception("unknown type: " + type(o))
+    #return repr(o)
+    return str(o)

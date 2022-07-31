@@ -16,7 +16,8 @@
             "name": "Python: Test File",
             "type": "python",
             "request": "launch",
-            "program": "impls/rippy/step1_read_print.py",
+            //"program": "impls/rippy/step1_read_print.py",
+            "program": "impls/rippy/step2_eval.py",
             "console": "integratedTerminal",
             "justMyCode": true
         }
