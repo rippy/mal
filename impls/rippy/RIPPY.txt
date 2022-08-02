@@ -1,0 +1,4 @@
+
+TODO:
+- Use annotations on all the functions in namespace to keep the symbol with the definition?
+

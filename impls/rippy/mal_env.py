@@ -3,7 +3,7 @@
 from mal_types import *
 
 class MalEnv:
-    def __init__(self, outer=None) -> None:
+    def __init__(self, outer=None, binds=None, exprs=None) -> None:
         """
         Define an Env object that is instantiated with a single outer parameter and starts with an empty
         associative data structure property data.
@@ -17,20 +17,34 @@ class MalEnv:
               (If no key is found and outer is not nil then call find (recurse) on the outer environment.)
         """
         self.outer = outer
+        self.binds = binds
+        self.exprs = exprs
+
         self.data = {}
-        pass
+        if binds:
+            for i in range(len(binds)):
+                #if binds[i] == "&":
+                if binds[i].value == "&":  # TODO assert binds[i] is a MalSymbol?
+                    # Implement Clojure-style variadic function parameters.
+                    # If a "&" symbol is encountered in the binds list, the next symbol in the binds list after the "&"
+                    # is bound to the rest of the exprs list that has not been bound yet.
+                    self.data[binds[i+1]] = exprs[i:]
+                    break
+                else:
+                    assert i < len(exprs), "invalid exprs length, missing value for bind"
+                    self.data[binds[i]] = exprs[i]
+
 
     def get(self, key: MalSymbol) -> MalType:
         return self.find(key)
 
-    def set(self, key: MalSymbol, value: MalScalar):
+    def set(self, key: MalSymbol, value: MalType):
         self.data[key] = value
 
-    #def find(self, key: MalSymbol) -> MalType:
     def find(self, key: MalSymbol) -> MalType:
         if key in self.data:
             return self.data[key]
 
         if self.outer is not None:
             return self.outer.find(key)
-        raise Exception("'" + key + "' not found")
+        raise Exception("env symbol '" + key.value + "' not found")

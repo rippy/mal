@@ -2,12 +2,31 @@
 
 from mal_types import *
 
-def pr_str(o: MalType) -> str:
+def pr_str(o: MalType, print_readably:bool=False) -> str:
     if o is None:
         raise Exception("unknown type: None")
 
+    if isinstance(o, MalNil):
+        return "nil"
+
+    if isinstance(o, MalString):
+        """
+        When print_readably is true, doublequotes, newlines, and backslashes are translated into their printed representations (the reverse of the reader).
+        The PRINT function in the main program should call pr_str with print_readably set to true.
+        """
+        if print_readably:
+            return '"' + o.value + '"'
+        else:
+            return o.value
+
+    if isinstance(o, MalBoolean):
+        return str(o.value).lower()
+
     if isinstance(o, MalSymbol):
         return o.symbol
+
+    if isinstance(o, MalKeyword):
+        return ":" + o.value
 
     if isinstance(o, MalNumber):
         return str(o.x)
@@ -33,4 +52,4 @@ def pr_str(o: MalType) -> str:
 
     #raise Exception("unknown type: " + type(o))
     #return repr(o)
-    return str(o)
+    return "#" + str(o)

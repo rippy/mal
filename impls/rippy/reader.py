@@ -39,6 +39,10 @@ def read_form(reader: Reader) -> MalType:
     if token[0] == ';':
         reader.next()
         return None
+    if token.startswith('"') and token.endswith('"'):
+        result = read_string(reader)
+    elif token.startswith(':'):
+        result = read_keyword(reader)
     elif "(" == token:
         reader.next()
         result = read_list(reader)
@@ -107,6 +111,17 @@ def is_number(n) -> bool:
 def read_atom(reader: Reader) -> MalType:
     token = reader.next()
 
+
+    if "true" == token:
+        result = MalTrue()
+        return result
+    elif "false" == token:
+        result = MalFalse()
+        return result
+    elif "nil" == token:
+        result = MalNil()
+        return result
+
     result = None
     if is_number(token):
         result = MalNumber(token)
@@ -114,4 +129,25 @@ def read_atom(reader: Reader) -> MalType:
         result = MalSymbol(token)
     return result
 
+def read_string(reader: Reader) -> MalString:
+    token = reader.next()
 
+    assert token.startswith('"'),  'string did not start with "'
+    assert token.endswith('"'),    'string did not end with "'
+
+    if len(token) < 3:
+        result = MalString("")
+
+    # trim leading and trailing quotes from the internal value representation (before we hand it over)
+    v = token[1:-1]
+    result = MalString(v)
+    return result
+
+def read_keyword(reader: Reader) -> MalString:
+    token = reader.next()
+
+    assert token.startswith(":"),  "keyword did not start with :"
+    assert len(token) > 1,         "keyword missing content (bare :)"
+
+    result = MalKeyword(token[1:])  # trim off the starting :
+    return result
