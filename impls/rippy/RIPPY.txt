@@ -2,3 +2,27 @@
 TODO:
 - Use annotations on all the functions in namespace to keep the symbol with the definition?
 
+
+i think it's getting parsed weird
+    user> (= [(list)] (list []))
+    false
+
+
+Problem with the reader and quoting
+
+    user> (println "\\"")
+    Traceback (most recent call last):
+    File "/Users/jkrippy/Documents/projects/wip/mal/impls/rippy/./step4_if_fn_do.py", line 262, in <module>
+        r = rep(s, repl_env)
+    File "/Users/jkrippy/Documents/projects/wip/mal/impls/rippy/./step4_if_fn_do.py", line 223, in rep
+        r = READ(s)
+    File "/Users/jkrippy/Documents/projects/wip/mal/impls/rippy/./step4_if_fn_do.py", line 26, in READ
+        result = reader.read_str(s)
+    File "/Users/jkrippy/Documents/projects/wip/mal/impls/rippy/reader.py", line 34, in read_str
+        result = read_form(reader)
+    File "/Users/jkrippy/Documents/projects/wip/mal/impls/rippy/reader.py", line 48, in read_form
+        result = read_list(reader)
+    File "/Users/jkrippy/Documents/projects/wip/mal/impls/rippy/reader.py", line 63, in read_list
+        raise Exception("end of input")
+    Exception: end of input
+

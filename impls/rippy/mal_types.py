@@ -70,7 +70,8 @@ class MalCollection(MalType):
             return False
 
         for i in range(0, M):
-            if self.items[i] != other.items[i]:
+            a, b = self.items[i], other.items[i]
+            if a != b:
                 return False
         return True
 

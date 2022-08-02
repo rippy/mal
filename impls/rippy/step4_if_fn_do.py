@@ -87,15 +87,14 @@ def EVAL(ast: MalType, repl_env: MalEnv) -> MalType:
 
             elif a0.symbol == "do":
                 # do: Evaluate all the elements of the list using eval_ast and return the final evaluated element.
-                a1 = ast.items[1]
-                assert isinstance(a1, MalList), "expected <class 'MalList'>, found %s" % (type(bindings))
+                assert isinstance(ast, MalList), "expected <class 'MalList'>, found %s" % (type(ast))
 
                 v = None
-                l = a1.items
+                l = ast.items[1:]
                 for i in range(0, len(l)):
                     e = l[i]
-                    #v = EVAL(e, repl_env)
-                    v = eval_ast(e, repl_env)
+                    #v = eval_ast(e, repl_env)
+                    v = EVAL(e, repl_env)
                 return v
 
             elif a0.symbol == "if":
@@ -264,6 +263,7 @@ if __name__ == '__main__':
                 print(r)
             except AssertionError as ae:
                 print("Assertion error: " + str(ae))
+                traceback.print_exception(type(ae), ae, ae.__traceback__)
             except EOFError as ex:
                 # user hit ^D, just loop around
                 print()

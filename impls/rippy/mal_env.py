@@ -28,7 +28,8 @@ class MalEnv:
                     # Implement Clojure-style variadic function parameters.
                     # If a "&" symbol is encountered in the binds list, the next symbol in the binds list after the "&"
                     # is bound to the rest of the exprs list that has not been bound yet.
-                    self.data[binds[i+1]] = exprs[i:]
+                    #self.data[binds[i+1]] = exprs[i:]
+                    self.data[binds[i+1]] = MalList(exprs[i:])   # use a MalList here so that we don't pass a python tuple through by accident
                     break
                 else:
                     assert i < len(exprs), "invalid exprs length, missing value for bind"

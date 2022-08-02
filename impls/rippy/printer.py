@@ -2,6 +2,14 @@
 
 from mal_types import *
 
+def _escape(p1: MalString) -> str:
+    s = p1.value
+    s = s.replace('\\', '\\\\')
+    s = s.replace( '"',  '\\"')
+    s = s.replace('\n',  '\\n')
+    return s
+
+
 def pr_str(o: MalType, print_readably:bool=False) -> str:
     if o is None:
         raise Exception("unknown type: None")
@@ -15,7 +23,7 @@ def pr_str(o: MalType, print_readably:bool=False) -> str:
         The PRINT function in the main program should call pr_str with print_readably set to true.
         """
         if print_readably:
-            return '"' + o.value + '"'
+            return '"' + _escape(o) + '"'
         else:
             return o.value
 

@@ -146,10 +146,11 @@ def mal_count(*args) -> MalNumber:
 
     if len(args) <= 0:
         return MalNumber(0)
+
     if isinstance(args[0], MalNil):
         return MalNumber(0)
 
-    assert isinstance(args[0], MalCollection), "expected <class 'MalCollection'>, found %s" % (type(args))
+    assert isinstance(args[0], MalCollection), "expected <class 'MalCollection'>, found %s" % (type(args[0]))
     return MalNumber(len(args[0].items))
 
 
@@ -173,7 +174,7 @@ def mal_println(*args) -> MalString:
     l = []
     for o in args:
         l.append(pr_str(o, print_readably=False))
-    v = "  ".join(l)
+    v = " ".join(l)
     print(v)  # TOOD print here?
     return MalNil()
 
